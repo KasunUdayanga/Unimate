@@ -13,6 +13,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { saveTask } from "../utils/storage";
 import { MaterialIcons } from "@expo/vector-icons";
 
+/* eslint-disable react/prop-types */
 export default function AddTaskScreen({ navigation }) {
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");

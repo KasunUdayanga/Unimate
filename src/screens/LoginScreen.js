@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { checkLogin } from "../utils/storage";
 
+/* eslint-disable react/prop-types */
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

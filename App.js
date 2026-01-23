@@ -8,7 +8,7 @@ import LoginScreen from "./src/screens/LoginScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import AddTaskScreen from "./src/screens/AddTaskScreen";
-import LoadingScreen from "./src/components/LoadingScreen";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -33,9 +33,6 @@ export default function App() {
     checkLoginStatus();
   }, []);
 
-  if (isLoading) {
-    return <LoadingScreen message="Checking UniMate..." />;
-  }
 
   return (
     <NavigationContainer>

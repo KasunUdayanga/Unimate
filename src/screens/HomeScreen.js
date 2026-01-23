@@ -11,7 +11,6 @@ import { getTasks, deleteTask, clearAllData } from "../utils/storage";
 import TaskCard from "../components/TaskCard";
 import { MaterialIcons } from "@expo/vector-icons";
 
-/* eslint-disable react/prop-types */
 export default function HomeScreen({ navigation }) {
   const [tasks, setTasks] = useState([]);
 
@@ -86,11 +85,27 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f0f2f5" },
-  list: { padding: 15 },
-  emptyState: { flex: 1, justifyContent: "center", alignItems: "center" },
-  emptyText: { fontSize: 20, fontWeight: "bold", color: "#888", marginTop: 10 },
-  subText: { color: "#aaa" },
+  container: {
+    flex: 1,
+    backgroundColor: "#f0f2f5",
+  },
+  list: {
+    padding: 15,
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#888",
+    marginTop: 10,
+  },
+  subText: {
+    color: "#aaa",
+  },
   fab: {
     position: "absolute",
     bottom: 30,

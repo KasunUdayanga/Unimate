@@ -85,8 +85,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#6200ea",
     padding: 20,
   },
-  logo: { fontSize: 40, fontWeight: "bold", color: "#fff" },
-  subLogo: { fontSize: 16, color: "#e0e0e0", marginBottom: 40 },
+  logo: {
+    fontSize: 40,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  subLogo: {
+    fontSize: 16,
+    color: "#e0e0e0",
+    marginBottom: 40,
+  },
   card: {
     width: "100%",
     backgroundColor: "#fff",
@@ -101,7 +109,12 @@ const styles = StyleSheet.create({
     color: "#333",
     textAlign: "center",
   },
-  label: { fontSize: 14, fontWeight: "bold", color: "#555", marginBottom: 5 },
+  label: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#555",
+    marginBottom: 5,
+  },
   input: {
     borderWidth: 1,
     borderColor: "#ddd",
@@ -117,6 +130,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 10,
   },
-  btnText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
-  link: { marginTop: 15, textAlign: "center", color: "#666" },
+  btnText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  link: {
+    marginTop: 15,
+    textAlign: "center",
+    color: "#666",
+  },
 });

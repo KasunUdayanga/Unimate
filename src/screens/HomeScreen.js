@@ -1,11 +1,10 @@
-import React, { useState, useCallback, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { getTasks, deleteTask, clearAllData } from "../utils/storage";
@@ -13,12 +12,6 @@ import TaskCard from "../components/TaskCard";
 import { MaterialIcons } from "@expo/vector-icons";
 
 /* eslint-disable react/prop-types */
-const LogoutButton = ({ onPress }) => (
-  <TouchableOpacity onPress={onPress} style={{ marginRight: 10 }}>
-    <MaterialIcons name="logout" size={24} color="#fff" />
-  </TouchableOpacity>
-);
-
 export default function HomeScreen({ navigation }) {
   const [tasks, setTasks] = useState([]);
 
@@ -32,34 +25,26 @@ export default function HomeScreen({ navigation }) {
     setTasks(updatedTasks);
   };
 
-  const handleLogout = useCallback(async () => {
+  const handleLogout = async () => {
     await clearAllData();
     navigation.reset({
       index: 0,
       routes: [{ name: "Login" }],
     });
-  }, [navigation]);
+  };
 
-  const confirmLogout = useCallback(() => {
-    Alert.alert("Logout", "Are you sure you want to logout?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Logout",
-        style: "destructive",
-        onPress: handleLogout,
-      },
-    ]);
-  }, [handleLogout]);
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
-      /* eslint-disable react/no-unstable-nested-components */
-      headerRight: () => <LogoutButton onPress={confirmLogout} />,
+      headerRight: () => (
+        <TouchableOpacity onPress={handleLogout} style={{ marginRight: 10 }}>
+          <MaterialIcons name="logout" size={24} color="#fff" />
+        </TouchableOpacity>
+      ),
     });
-  }, [navigation, confirmLogout]);
+  }, []);
 
   useFocusEffect(
-    useCallback(() => {
+    React.useCallback(() => {
       loadTasks();
     }, [])
   );

@@ -6,16 +6,18 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
 import { getTasks, deleteTask, clearAllData } from "../utils/storage";
 import TaskCard from "../components/TaskCard";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
 
+/* eslint-disable react/prop-types */
 export default function HomeScreen({ navigation }) {
   const [tasks, setTasks] = useState([]);
 
   const loadTasks = async () => {
     const data = await getTasks();
+    console.log("Loaded tasks:", data); // Debug log
     setTasks(data);
   };
 
@@ -40,7 +42,7 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
       ),
     });
-  }, []);
+  }, [navigation]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -62,14 +64,18 @@ export default function HomeScreen({ navigation }) {
         <FlatList
           data={tasks}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TaskCard
-              title={item.title}
-              subject={item.subject}
-              dueDate={item.dueDate}
-              onDelete={() => handleDelete(item.id)}
-            />
-          )}
+          renderItem={({ item }) => {
+            console.log("Rendering item:", item); // Debug log
+            return (
+              <TaskCard
+                type={item.type || "assignment"}
+                title={item.title}
+                subject={item.subject}
+                dueDate={item.dueDate}
+                onDelete={() => handleDelete(item.id)}
+              />
+            );
+          }}
           contentContainerStyle={styles.list}
         />
       )}
@@ -118,7 +124,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     elevation: 5,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
     shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
 });

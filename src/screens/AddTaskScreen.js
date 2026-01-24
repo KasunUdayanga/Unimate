@@ -10,6 +10,7 @@ import {
 import { saveTask } from "../utils/storage";
 
 export default function AddTaskScreen({ navigation }) {
+  const [type, setType] = useState("lecture");
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
   const [dateText, setDateText] = useState("");
@@ -67,10 +68,13 @@ export default function AddTaskScreen({ navigation }) {
 
     const newTask = {
       id: Date.now().toString(),
+      type: type, // This should be 'lecture' or 'assignment'
       title,
       subject,
       dueDate: `${dateText} at ${timeText}`,
     };
+
+    console.log("Saving task:", newTask); // Debug log
 
     await saveTask(newTask);
     Alert.alert("Success", "Task saved successfully!");
@@ -79,6 +83,42 @@ export default function AddTaskScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.label}>Select Type *</Text>
+      <View style={styles.typeContainer}>
+        <TouchableOpacity
+          style={[
+            styles.typeBtn,
+            type === "lecture" && styles.typeBtnActive,
+          ]}
+          onPress={() => setType("lecture")}
+        >
+          <Text
+            style={[
+              styles.typeText,
+              type === "lecture" && styles.typeTextActive,
+            ]}
+          >
+            📚 Lecture
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.typeBtn,
+            type === "assignment" && styles.typeBtnActive,
+          ]}
+          onPress={() => setType("assignment")}
+        >
+          <Text
+            style={[
+              styles.typeText,
+              type === "assignment" && styles.typeTextActive,
+            ]}
+          >
+            📝 Assignment
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       <Text style={styles.label}>Title *</Text>
       <TextInput
@@ -88,7 +128,7 @@ export default function AddTaskScreen({ navigation }) {
           setTitle(text);
           if (errors.title) setErrors({ ...errors, title: "" });
         }}
-        placeholder="Assignment Name / Lecture"
+        placeholder={type === "lecture" ? "Lecture Topic" : "Assignment Name"}
       />
       {errors.title ? <Text style={styles.errorText}>{errors.title}</Text> : null}
 
@@ -146,6 +186,32 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 5,
     color: "#333",
+  },
+  typeContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
+    gap: 10,
+  },
+  typeBtn: {
+    flex: 1,
+    padding: 15,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "#ddd",
+    backgroundColor: "#f9f9f9",
+    alignItems: "center",
+  },
+  typeBtnActive: {
+    borderColor: "#6200ea",
+    backgroundColor: "#6200ea",
+  },
+  typeText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#666",
+  },
+  typeTextActive: {
+    color: "#fff",
   },
   input: {
     borderWidth: 1,

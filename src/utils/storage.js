@@ -1,72 +1,104 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const USER_KEY = "@unimate_user";
-const TASKS_KEY = "@unimate_tasks";
+const USERS_KEY = "users";
+const TASKS_KEY = "tasks";
 
-export const registerUser = async (userData) => {
+// User Registration
+export const registerUser = async (user) => {
   try {
-    await AsyncStorage.setItem(USER_KEY, JSON.stringify(userData));
+    const users = await AsyncStorage.getItem(USERS_KEY);
+    const userList = users ? JSON.parse(users) : [];
+
+    const existingUser = userList.find((u) => u.email === user.email);
+    if (existingUser) {
+      return false;
+    }
+
+    userList.push(user);
+    await AsyncStorage.setItem(USERS_KEY, JSON.stringify(userList));
     return true;
-  } catch (e) {
-    console.error("Error registering user:", e);
+  } catch (error) {
+    console.error("Error registering user:", error);
     return false;
   }
 };
 
+// User Login
 export const checkLogin = async (email, password) => {
   try {
-    const jsonValue = await AsyncStorage.getItem(USER_KEY);
-    if (jsonValue != null) {
-      const user = JSON.parse(jsonValue);
-      if (user.email === email && user.password === password) {
-        return user;
-      }
-    }
-    return null;
-  } catch (e) {
-    console.error("Error checking login:", e);
+    const users = await AsyncStorage.getItem(USERS_KEY);
+    const userList = users ? JSON.parse(users) : [];
+
+    const user = userList.find(
+      (u) => u.email === email && u.password === password
+    );
+    return user || null;
+  } catch (error) {
+    console.error("Error checking login:", error);
     return null;
   }
 };
 
-export const saveTask = async (newTask) => {
+// Save Task
+export const saveTask = async (task) => {
   try {
-    const existingTasks = await getTasks();
-    const updatedTasks = [...existingTasks, newTask];
-    await AsyncStorage.setItem(TASKS_KEY, JSON.stringify(updatedTasks));
+    const tasks = await AsyncStorage.getItem(TASKS_KEY);
+    const taskList = tasks ? JSON.parse(tasks) : [];
+    
+    // Ensure task has a type field, default to 'assignment' if missing
+    const taskWithType = {
+      ...task,
+      type: task.type || 'assignment'
+    };
+    
+    taskList.push(taskWithType);
+    await AsyncStorage.setItem(TASKS_KEY, JSON.stringify(taskList));
     return true;
-  } catch (e) {
-    console.error("Error saving task:", e);
+  } catch (error) {
+    console.error("Error saving task:", error);
     return false;
   }
 };
 
+// Get All Tasks
 export const getTasks = async () => {
   try {
-    const jsonValue = await AsyncStorage.getItem(TASKS_KEY);
-    return jsonValue === null ? [] : JSON.parse(jsonValue);
-  } catch (e) {
-    console.error("Error loading tasks:", e);
+    const tasks = await AsyncStorage.getItem(TASKS_KEY);
+    const taskList = tasks ? JSON.parse(tasks) : [];
+    
+    // Ensure all tasks have a type field
+    return taskList.map(task => ({
+      ...task,
+      type: task.type || 'assignment'
+    }));
+  } catch (error) {
+    console.error("Error getting tasks:", error);
     return [];
   }
 };
 
-export const deleteTask = async (taskId) => {
+// Delete Task
+export const deleteTask = async (id) => {
   try {
-    const tasks = await getTasks();
-    const filteredTasks = tasks.filter((task) => task.id !== taskId);
-    await AsyncStorage.setItem(TASKS_KEY, JSON.stringify(filteredTasks));
-    return filteredTasks;
-  } catch (e) {
-    console.error("Error deleting task:", e);
+    const tasks = await AsyncStorage.getItem(TASKS_KEY);
+    const taskList = tasks ? JSON.parse(tasks) : [];
+
+    const updatedList = taskList.filter((task) => task.id !== id);
+    await AsyncStorage.setItem(TASKS_KEY, JSON.stringify(updatedList));
+    return updatedList;
+  } catch (error) {
+    console.error("Error deleting task:", error);
     return [];
   }
 };
 
+// Clear All Data (Logout)
 export const clearAllData = async () => {
   try {
-    await AsyncStorage.clear();
-  } catch (e) {
-    console.error("Error clearing data:", e);
+    await AsyncStorage.removeItem(TASKS_KEY);
+    return true;
+  } catch (error) {
+    console.error("Error clearing data:", error);
+    return false;
   }
 };

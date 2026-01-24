@@ -1,4 +1,3 @@
-// src/screens/AddTaskScreen.js
 import React, { useState } from "react";
 import {
   View,
@@ -7,56 +6,70 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  Platform,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { saveTask } from "../utils/storage";
-import { MaterialIcons } from "@expo/vector-icons";
 
-/* eslint-disable react/prop-types */
 export default function AddTaskScreen({ navigation }) {
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
+  const [dateText, setDateText] = useState("");
+  const [timeText, setTimeText] = useState("");
+  const [errors, setErrors] = useState({
+    title: "",
+    subject: "",
+    date: "",
+    time: "",
+  });
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === "ios");
-    setDate(currentDate);
+  const validateDate = (date) => {
+    const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
+    return dateRegex.test(date);
   };
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode("date");
-  };
-
-  const showTimepicker = () => {
-    showMode("time");
+  const validateTime = (time) => {
+    const timeRegex = /^(0?[1-9]|1[0-2]):[0-5][0-9]\s?(AM|PM|am|pm)$/;
+    return timeRegex.test(time);
   };
 
   const handleSave = async () => {
-    if (!title.trim() || !subject.trim()) {
-      Alert.alert("Error", "Please enter Title and Subject");
-      return;
+    const newErrors = {
+      title: "",
+      subject: "",
+      date: "",
+      time: "",
+    };
+
+    if (!title.trim()) {
+      newErrors.title = "Title is required";
     }
 
-    const formattedDate = date.toLocaleDateString();
-    const formattedTime = date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    if (!subject.trim()) {
+      newErrors.subject = "Subject is required";
+    }
+
+    if (!dateText.trim()) {
+      newErrors.date = "Date is required";
+    } else if (!validateDate(dateText)) {
+      newErrors.date = "Invalid format. Use MM/DD/YYYY (e.g., 01/25/2026)";
+    }
+
+    if (!timeText.trim()) {
+      newErrors.time = "Time is required";
+    } else if (!validateTime(timeText)) {
+      newErrors.time = "Invalid format. Use HH:MM AM/PM (e.g., 2:30 PM)";
+    }
+
+    setErrors(newErrors);
+
+    if (newErrors.title || newErrors.subject || newErrors.date || newErrors.time) {
+      return;
+    }
 
     const newTask = {
       id: Date.now().toString(),
       title,
       subject,
-      dueDate: `${formattedDate} at ${formattedTime}`,
+      dueDate: `${dateText} at ${timeText}`,
     };
 
     await saveTask(newTask);
@@ -68,50 +81,53 @@ export default function AddTaskScreen({ navigation }) {
     <View style={styles.container}>
       <Text style={styles.header}>Add New Schedule</Text>
 
-      <Text style={styles.label}>Title</Text>
+      <Text style={styles.label}>Title *</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, errors.title ? styles.inputError : null]}
         value={title}
-        onChangeText={setTitle}
+        onChangeText={(text) => {
+          setTitle(text);
+          if (errors.title) setErrors({ ...errors, title: "" });
+        }}
         placeholder="Assignment Name / Lecture"
       />
+      {errors.title ? <Text style={styles.errorText}>{errors.title}</Text> : null}
 
-      <Text style={styles.label}>Subject</Text>
+      <Text style={styles.label}>Subject *</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, errors.subject ? styles.inputError : null]}
         value={subject}
-        onChangeText={setSubject}
+        onChangeText={(text) => {
+          setSubject(text);
+          if (errors.subject) setErrors({ ...errors, subject: "" });
+        }}
         placeholder="Subject Code (e.g. ICT4242)"
       />
+      {errors.subject ? <Text style={styles.errorText}>{errors.subject}</Text> : null}
 
-      <Text style={styles.label}>Pick Date & Time</Text>
-      <View style={styles.row}>
-        <TouchableOpacity style={styles.pickerBtn} onPress={showDatepicker}>
-          <MaterialIcons name="calendar-today" size={24} color="#fff" />
-          <Text style={styles.pickerText}>{date.toLocaleDateString()}</Text>
-        </TouchableOpacity>
+      <Text style={styles.label}>Select Date *</Text>
+      <TextInput
+        style={[styles.input, errors.date ? styles.inputError : null]}
+        value={dateText}
+        onChangeText={(text) => {
+          setDateText(text);
+          if (errors.date) setErrors({ ...errors, date: "" });
+        }}
+        placeholder="MM/DD/YYYY (e.g., 01/25/2026)"
+      />
+      {errors.date ? <Text style={styles.errorText}>{errors.date}</Text> : null}
 
-        <TouchableOpacity style={styles.pickerBtn} onPress={showTimepicker}>
-          <MaterialIcons name="access-time" size={24} color="#fff" />
-          <Text style={styles.pickerText}>
-            {date.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={false}
-          display="default"
-          onChange={onChange}
-        />
-      )}
+      <Text style={styles.label}>Select Time *</Text>
+      <TextInput
+        style={[styles.input, errors.time ? styles.inputError : null]}
+        value={timeText}
+        onChangeText={(text) => {
+          setTimeText(text);
+          if (errors.time) setErrors({ ...errors, time: "" });
+        }}
+        placeholder="HH:MM AM/PM (e.g., 2:30 PM)"
+      />
+      {errors.time ? <Text style={styles.errorText}>{errors.time}</Text> : null}
 
       <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
         <Text style={styles.saveBtnText}>SAVE TASK</Text>
@@ -144,35 +160,26 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     padding: 12,
     borderRadius: 8,
-    marginBottom: 20,
+    marginBottom: 5,
     fontSize: 16,
     backgroundColor: "#f9f9f9",
   },
-
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 30,
+  inputError: {
+    borderColor: "#ff0000",
+    borderWidth: 2,
   },
-  pickerBtn: {
-    flexDirection: "row",
+  errorText: {
+    color: "#ff0000",
+    fontSize: 14,
+    marginBottom: 15,
+    marginTop: 0,
+  },
+  saveBtn: {
     backgroundColor: "#6200ea",
     padding: 15,
     borderRadius: 8,
-    width: "48%",
     alignItems: "center",
-    justifyContent: "center",
-  },
-  pickerText: {
-    color: "#fff",
-    fontWeight: "bold",
-    marginLeft: 10,
-  },
-  saveBtn: {
-    backgroundColor: "#333",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
+    marginTop: 20,
   },
   saveBtnText: {
     color: "#fff",

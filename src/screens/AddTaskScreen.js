@@ -79,7 +79,6 @@ export default function AddTaskScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Add New Schedule</Text>
 
       <Text style={styles.label}>Title *</Text>
       <TextInput
@@ -141,13 +140,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "#fff",
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#6200ea",
-    marginBottom: 20,
-    textAlign: "center",
   },
   label: {
     fontSize: 16,

@@ -69,7 +69,7 @@ export default function App() {
         <Stack.Screen
           name="AddTask"
           component={AddTaskScreen}
-          options={{ title: "Add New Task" }}
+          options={{ title: "Add Lecture/ Assignment" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { registerUser } from "../utils/storage";
 
-/* eslint-disable react/prop-types */
 export default function SignUpScreen({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

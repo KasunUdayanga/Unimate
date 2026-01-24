@@ -12,7 +12,6 @@ const TaskCard = ({ title, subject, dueDate, onDelete }) => {
         <Text style={styles.date}>Due: {dueDate}</Text>
       </View>
 
-      {/* Delete Button */}
       <TouchableOpacity onPress={onDelete} style={styles.deleteBtn}>
         <MaterialIcons name="delete-outline" size={26} color="#FF3B30" />
       </TouchableOpacity>
@@ -29,8 +28,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    elevation: 3, // Shadow for Android
-    shadowColor: "#000", // Shadow for iOS
+    elevation: 3, 
+    shadowColor: "#000", 
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,

@@ -14,7 +14,6 @@ import AddTaskScreen from "./src/screens/AddTaskScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
   const [initialRoute, setInitialRoute] = useState("Onboarding");
 
   useEffect(() => {
@@ -26,9 +25,7 @@ export default function App() {
         }
       } catch (e) {
         console.error(e);
-      } finally {
-        setIsLoading(false);
-      }
+      } 
     };
     checkLoginStatus();
   }, []);

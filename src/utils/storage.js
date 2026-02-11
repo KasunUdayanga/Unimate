@@ -45,7 +45,6 @@ export const saveTask = async (task) => {
     const tasks = await AsyncStorage.getItem(TASKS_KEY);
     const taskList = tasks ? JSON.parse(tasks) : [];
     
-    // Ensure task has a type field, default to 'assignment' if missing
     const taskWithType = {
       ...task,
       type: task.type || 'assignment'

@@ -11,13 +11,13 @@ import TaskCard from "../components/TaskCard";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 
-/* eslint-disable react/prop-types */
+
 export default function HomeScreen({ navigation }) {
   const [tasks, setTasks] = useState([]);
 
   const loadTasks = async () => {
     const data = await getTasks();
-    console.log("Loaded tasks:", data); // Debug log
+    console.log("Loaded tasks:", data); 
     setTasks(data);
   };
 
@@ -65,7 +65,7 @@ export default function HomeScreen({ navigation }) {
           data={tasks}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => {
-            console.log("Rendering item:", item); // Debug log
+            console.log("Rendering item:", item); 
             return (
               <TaskCard
                 type={item.type || "assignment"}

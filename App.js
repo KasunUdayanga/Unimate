@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import OnboardingScreen from "./src/screens/OnboardingScreen";
 import LoginScreen from "./src/screens/LoginScreen";
@@ -10,33 +9,15 @@ import SignUpScreen from "./src/screens/SignUpScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import AddTaskScreen from "./src/screens/AddTaskScreen";
 
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [initialRoute, setInitialRoute] = useState("Onboarding");
-
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const user = await AsyncStorage.getItem("@unimate_user");
-        if (user !== null) {
-          setInitialRoute("Home");
-        }
-      } catch (e) {
-        console.error(e);
-      } 
-    };
-    checkLoginStatus();
-  }, []);
-
-
   return (
     <NavigationContainer>
       <StatusBar style="light" backgroundColor="#6200ea" />
 
       <Stack.Navigator
-        initialRouteName={initialRoute}
+        initialRouteName="Onboarding"
         screenOptions={{
           headerStyle: { backgroundColor: "#6200ea" },
           headerTintColor: "#fff",

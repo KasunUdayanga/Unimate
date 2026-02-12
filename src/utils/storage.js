@@ -65,7 +65,7 @@ export const getTasks = async () => {
     const tasks = await AsyncStorage.getItem(TASKS_KEY);
     const taskList = tasks ? JSON.parse(tasks) : [];
     
-    // Ensure all tasks have a type field
+   
     return taskList.map(task => ({
       ...task,
       type: task.type || 'assignment'
@@ -94,7 +94,7 @@ export const deleteTask = async (id) => {
 // Clear All Data (Logout)
 export const clearAllData = async () => {
   try {
-    await AsyncStorage.removeItem(TASKS_KEY);
+    await AsyncStorage.removeItem([TASKS_KEY, USERS_KEY]);
     return true;
   } catch (error) {
     console.error("Error clearing data:", error);
